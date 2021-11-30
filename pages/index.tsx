@@ -1,4 +1,4 @@
-import Styles from '../styles/home.module.css';
+import Styles from '../styles/Home.module.css';
 import { Layout } from './components/Layout';
 
 export default function Home() {
