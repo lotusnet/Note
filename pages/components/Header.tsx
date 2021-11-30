@@ -15,3 +15,5 @@ export const Header : VFC<Props> = (props: Props) =>
     </>
   );
 };
+
+export default Header

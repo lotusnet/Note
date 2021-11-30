@@ -23,3 +23,5 @@ export const Layout : VFC<Props> = (props: Props) =>
       </>
     );
 }
+
+export default Layout
