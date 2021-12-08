@@ -1,55 +1,54 @@
-import type { VFC } from 'react';
-import { Layout } from '../components/layout/Layout';
+import React, { VFC } from "react";
+import { useDrop } from "react-dnd";
+import { useRecoilValue } from "recoil";
+import { DndItemTypes } from "../DndItemTypes";
+import { droppedColumnState } from "../recoil/dropColumn";
+import { IssueItem } from "./IssueItem";
+import { IssueStatus } from "./IssueStatus";
 
-export const CheckList : VFC = () =>
-{
-  return (
-    <>
-      <Layout title={`CheckList`}>
-      <h1>CheckList</h1>
-      <form id="createForm" className="new">
-          <div className="new-head">
-            <h2 className="new-title">タスクを新規作成</h2>
-            <button className="new-button">作成</button>
+export type DropResult = {
+  status: IssueStatus;
+};
+
+type Props = {
+  status: IssueStatus;
+  backgroundColor: string;
+  visibleDeleteButton: boolean;
+};
+
+export const IssueColumn: VFC<Props> = ({ status, backgroundColor, visibleDeleteButton }) => {
+    const [, drop] = useDrop({
+      // 必須: ドラッグするコンポーネントと同じtypeを指定する
+      accept: DndItemTypes.Issue,
+      // ドロップされたときにオブジェクトを返す
+      drop: () => ({ status }),
+    });
+  
+    // ドロップされたカラム番号(useRecoilValue(droppedColumnState))とpropsのcolNumberが一致している場合はドラッグされた
+    const isDropped = useRecoilValue(droppedColumnState) === status;
+  
+    return (
+      <>
+      <div className="lane-item">
+        <div className="lane-item-inner">
+          <div className="lane-status">
+            <p className="lane-status-name">{status}</p>
+            {
+              visibleDeleteButton ? 
+                <button id="deleteAllDoneTask" className="lane-status-delete">DONE のタスクを一括削除</button> :
+                null
+            }
           </div>
-
-          <label className="new-label" htmlFor="title">タイトル</label>
-          <input id="title" className="new-input" name="title" />
-        </form>
-
-        <div className="lane">
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">TODO</p>
-              </div>
-
-              <div id="todoList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DOING</p>
-              </div>
-
-              <div id="doingList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DONE</p>
-                <button id="deleteAllDoneTask" className="lane-status-delete">DONE のタスクを一括削除</button>
-              </div>
-
-              <div id="doneList" className="tasks"></div>
-            </div>
+          <div id="todoList" className="tasks"
+            // refにdropを渡してドロップ対象のコンポーネントにする。
+            ref={drop}
+            //className={`flex justify-center items-center h-96 w-48 ${backgroundColor}`}
+          >
+          {/* ドロップされた場合はドラッグしたコンポーネントを表示 */}          
+          {isDropped && <IssueItem  title='Drag Item' id='' status={status}/>}
           </div>
         </div>
-      </Layout>
+      </div>
       <style jsx>{`
       .container {
         max-width: 900px;
@@ -202,8 +201,6 @@ export const CheckList : VFC = () =>
         filter: alpha(opacity=20);
       }
       `}</style>
-    </>
-  )
-}
-
-export default CheckList
+      </>
+    );
+  };

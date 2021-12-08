@@ -1,5 +1,5 @@
 import { VFC } from 'react';
-import { Layout } from '../components/Layout';
+import { Layout } from '../components/layout/Layout';
 
 export type NoteContentValues = {
   content: string;

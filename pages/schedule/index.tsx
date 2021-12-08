@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import { Layout } from '../components/Layout';
+import { Layout } from '../components/layout/Layout';
 
 export const Schedule : VFC = () =>
 {

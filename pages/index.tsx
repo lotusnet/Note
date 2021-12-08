@@ -1,12 +1,13 @@
 import Styles from '../styles/Home.module.css';
-import { Layout } from './components/Layout';
+import { Layout } from './components/layout/Layout';
 
 export default function Home() {
     return (
     <>
       <Layout title={`HOME`}>
         {/* インラインスタイル */}
-        <h1 style={{color: `blue`}}>Hello Next.js World!!!</h1>
+        <h1 style={{color: `blue`}}>CARO</h1>
+        <h2>[Check Action to Realization of  Objective]</h2>
         <p className={"title"}>これから順次公開していきます。</p>
         <p>MEMO</p>
         {/* CSS Module id,classセレクター以外は使用できない。 */}

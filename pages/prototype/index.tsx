@@ -1,12 +1,14 @@
 import type { VFC } from 'react';
+import React from 'react';
 import { Layout } from '../components/layout/Layout';
+import { IssueColumn } from '../components/prototype/IssueColumn';
 
-export const CheckList : VFC = () =>
+export const Prototype : VFC = () =>
 {
   return (
     <>
-      <Layout title={`CheckList`}>
-      <h1>CheckList</h1>
+      <Layout title={`PROTO TYPE CheckList`}>
+      <h1>[PROTO TYPE] CheckList</h1>
       <form id="createForm" className="new">
           <div className="new-head">
             <h2 className="new-title">タスクを新規作成</h2>
@@ -16,38 +18,10 @@ export const CheckList : VFC = () =>
           <label className="new-label" htmlFor="title">タイトル</label>
           <input id="title" className="new-input" name="title" />
         </form>
-
         <div className="lane">
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">TODO</p>
-              </div>
-
-              <div id="todoList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DOING</p>
-              </div>
-
-              <div id="doingList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DONE</p>
-                <button id="deleteAllDoneTask" className="lane-status-delete">DONE のタスクを一括削除</button>
-              </div>
-
-              <div id="doneList" className="tasks"></div>
-            </div>
-          </div>
+          <IssueColumn status="TODO" backgroundColor="red" visibleDeleteButton={false} />
+          <IssueColumn status="DOING" backgroundColor="yellow" visibleDeleteButton={false} />
+          <IssueColumn status="DONE" backgroundColor="green" visibleDeleteButton={true} />
         </div>
       </Layout>
       <style jsx>{`
@@ -206,4 +180,4 @@ export const CheckList : VFC = () =>
   )
 }
 
-export default CheckList
+export default Prototype

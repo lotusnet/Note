@@ -1,56 +1,52 @@
-import type { VFC } from 'react';
-import { Layout } from '../components/layout/Layout';
+import { VFC } from "react";
+import { useDrag } from "react-dnd";
+import { useRecoilState } from "recoil";
+import { DndItemTypes } from "../DndItemTypes";
+import { droppedColumnState } from "../recoil/dropColumn";
+import { DropResult } from "./IssueColumn";
+import { IssueStatus } from "./IssueStatus";
 
-export const CheckList : VFC = () =>
-{
+type Props = {
+  id: string
+  title: string
+  status: IssueStatus
+};
+
+export const IssueItem: VFC<Props> = ({ id, title, status }) => {
+  const [, setDroppedColumnState] = useRecoilState(droppedColumnState);
+
+  const [collected, drag, preview] = useDrag(() => ({
+    type: DndItemTypes.Issue,
+    end: (_, monitor) => {
+      const dropResult = monitor.getDropResult() as DropResult;
+      if (dropResult) {
+        // ドロップされたカラム番号をstateにセット
+        setDroppedColumnState(dropResult.status);
+      }
+    },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }))
+
+  const { isDragging: dragging } = collected;
+
+  // ドラッグ中の場合はopacityを変えている
+  const opacity = dragging ? 'opacity-50' : 'opacity-100';
+
   return (
+    // refにdragを渡してドラッグ対象にする
     <>
-      <Layout title={`CheckList`}>
-      <h1>CheckList</h1>
-      <form id="createForm" className="new">
-          <div className="new-head">
-            <h2 className="new-title">タスクを新規作成</h2>
-            <button className="new-button">作成</button>
-          </div>
-
-          <label className="new-label" htmlFor="title">タイトル</label>
-          <input id="title" className="new-input" name="title" />
-        </form>
-
-        <div className="lane">
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">TODO</p>
-              </div>
-
-              <div id="todoList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DOING</p>
-              </div>
-
-              <div id="doingList" className="tasks"></div>
-            </div>
-          </div>
-
-          <div className="lane-item">
-            <div className="lane-item-inner">
-              <div className="lane-status">
-                <p className="lane-status-name">DONE</p>
-                <button id="deleteAllDoneTask" className="lane-status-delete">DONE のタスクを一括削除</button>
-              </div>
-
-              <div id="doneList" className="tasks"></div>
-            </div>
-          </div>
-        </div>
-      </Layout>
-      <style jsx>{`
+    <div
+      ref={drag}
+      className={`flex justify-center items-center rounded-2xl h-28 w-40 bg-white ${opacity}`}
+    >
+      <div className="task-item">
+        <span>{title}</span>
+        <button>削除</button>
+      </div>
+    </div>
+    <style jsx>{`
       .container {
         max-width: 900px;
         width: 100%;
@@ -161,7 +157,7 @@ export const CheckList : VFC = () =>
         height: 15px;
         margin-right: 5px;
         border-radius: 2px;
-        background-color: #aaa;
+        background-color: #9fa8da;
         content: "";
       }
       .task-item > span {
@@ -203,7 +199,5 @@ export const CheckList : VFC = () =>
       }
       `}</style>
     </>
-  )
-}
-
-export default CheckList
+  );
+};

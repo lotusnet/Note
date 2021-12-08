@@ -9,8 +9,12 @@ export const Header : VFC<Props> = (props: Props) =>
   const {title} = props;
   return (
     <>      
+      <div className="header-footer">
+        <h1>CARO [Check Action to Realization of  Objective]</h1>
+        
+      </div>
       <div>
-        <p>HEADER &gt;&gt; [{title}] PAGE</p>
+        <h3>&gt;&gt; [{title}] PAGE</h3>
       </div>
     </>
   );
